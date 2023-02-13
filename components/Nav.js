@@ -15,7 +15,7 @@ export default function Nav() {
 
       <ul>
         {!user && (
-          <Link href={'/auth/login'} className="text-xl font-semibold bg-brownStrong text-white p-2 rounded">
+          <Link href={'/auth/login'} className="text-xl font-semibold bg-gray-700  text-white p-2 rounded">
             Join Now
           </Link>
         )}
