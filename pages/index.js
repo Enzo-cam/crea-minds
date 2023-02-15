@@ -1,6 +1,33 @@
 import Head from 'next/head'
+import Message from '@/components/Message'
+import { useEffect, useState} from 'react'
+import { db } from '@/utils/firebase'
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore'
 
 export default function Home() {
+  const [allPosts, setAllPosts] = useState([])
+
+  const getPosts = async ()=>{
+    const collectionRef = collection(db, 'posts')
+
+    //We want the collection order BY the timestamp in descendent
+    const queryDate = query(collectionRef, orderBy('timestamp', 'desc'))
+    
+    //onSnapshot gonna update our data in real time SO if a user make a new POST, it's gonna automatically show it.
+    const newPosts = onSnapshot(queryDate, (snapshot) =>{
+      setAllPosts(snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id : doc.id
+      })))
+    } )
+    return newPosts;
+  }
+
+  useEffect(() => {
+    getPosts()
+  }, [])
+  
+
   return (
     <>
       <Head>
@@ -9,9 +36,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        
-      </main>
+
+      <div className='my-12'>
+        <h2 className='text-2xl font-medium'>See what other people are posting</h2>
+        {/* <Message /> */}
+        {/* <Message /> */}
+
+      </div>
     </>
   )
 }
