@@ -1,13 +1,15 @@
 import Head from 'next/head'
 import Message from '@/components/Message'
 import { useEffect, useState} from 'react'
+import Link from 'next/link'
 import { db } from '@/utils/firebase'
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore'
+import {BiComment} from 'react-icons/bi'
 
 export default function Home() {
   const [allPosts, setAllPosts] = useState([])
 
-  const getPosts = async ()=>{
+  const getPosts = async () =>{
     const collectionRef = collection(db, 'posts')
 
     //We want the collection order BY the timestamp in descendent
@@ -43,7 +45,13 @@ export default function Home() {
           <Message 
             message={post}
             key={post.id}
-          />
+          >
+            <Link href={{ pathname: `/${post.id}`, query: {...post} }}>
+              <button className='text-2xl text-brownStrong'>
+                <BiComment />
+              </button>
+            </Link>
+          </Message>
         ))}
 
       </div>
