@@ -1,7 +1,8 @@
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { collection, onSnapshot, query, where } from "firebase/firestore"
+import { collection, deleteDoc, doc, onSnapshot, query, where } from "firebase/firestore"
 import { auth, db } from "@/utils/firebase"
 
 import Message from "@/components/Message"
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const route = useRouter()
   const [user, loading] = useAuthState(auth)
   const [posts, setPosts] = useState([])
+
   const checkUser = async() =>{
     
     if(loading) return;
@@ -23,7 +25,6 @@ export default function Dashboard() {
       setPosts(snapshot.docs.map((doc) => ({...doc.data(), id:doc.id})))
     }))
     return postsUser;
-
   }
 
   //User logged?
@@ -31,6 +32,12 @@ export default function Dashboard() {
     checkUser()
   }, [user, loading])
   
+  //Delete post
+  const deletePost = async(id) => {
+
+    const docRef = doc(db, 'posts', id)
+    await deleteDoc(docRef)
+  }
   
   return (
     <div>
@@ -43,8 +50,15 @@ export default function Dashboard() {
               key={post.id}
             >
               <div className="flex gap-5 text-2xl justify-end">
-                <button className="text-red-600"><BsTrash2Fill/></button>
-                <button className="text-sky-900"><AiFillEdit/></button>
+                {/* We pass the POST as query so I can have ALL the information about the post that the user is going to Edit. */}
+                <Link href={{pathname : '/post', query: post}}> 
+                  <button className="text-sky-900"><AiFillEdit/></button>
+                </Link>
+                <button className="text-red-600"
+                  onClick={() => deletePost(post.id)}
+                >
+                    <BsTrash2Fill/>
+                </button>
               </div>
             </Message>
           ))}

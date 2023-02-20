@@ -9,7 +9,8 @@ export default function Post() {
     const [user, loading] = useAuthState(auth)
     const [post, setPost] = useState({description : ''})
     const route = useRouter()
-    
+    const updateData = route.query;
+
     const submitPost = async(e) => {
         e.preventDefault()
 
@@ -38,6 +39,17 @@ export default function Post() {
             console.log(error)
         }
     }
+
+    const checkingUser = async() =>{
+        if(loading) return;
+        if(!user) route.push('/auth/login ')
+    }
+
+    useEffect(() => {
+        checkingUser()
+    }, [user, loading])
+    
+
     return (
         <div className="my-20 py-12 px-8 shadow-lg rounded-lg max-w-md mx-auto ">
             <form onSubmit={submitPost}>
