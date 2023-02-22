@@ -5,7 +5,7 @@ export default function Message({children, message}) {
     const {description, username, avatar} = message
 
     return (
-        <div className="bg-white p-8 border-b-2 rounded-lg">
+        <div className="bg-white p-6 border-b-2 rounded-lg">
             <div className="flex items-center gap-2">
                 <Image 
                     src={avatar}

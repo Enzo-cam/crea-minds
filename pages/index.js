@@ -48,7 +48,10 @@ export default function Home() {
           >
             <Link href={{ pathname: `/${post.id}`, query: {...post} }}>
               <button className='text-2xl text-brownStrong'>
-                <BiComment />
+                <div className='flex gap-1 items-center'>
+                  <p className='text-lg'>{post.comments?.length > 0 ? post.comments.length : 0 }</p>
+                  <BiComment />
+                </div>
               </button>
             </Link>
           </Message>
